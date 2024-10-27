@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Strength Table</title>
+    <style>
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid black; padding: 8px; text-align: center; }
+    </style>
+</head>
+<body>
+    <h1>Live Currency Strength Comparison</h1>
+    <table id="currencyTable">
+        <tr>
+            <th>Currency</th>
+            <th>Economic Data</th>
+            <th>Central Bank Stance</th>
+            <th>Geopolitical Factors</th>
+            <th>Overall Strength</th>
+        </tr>
+    </table>
+
+    <script>
+        const apiKey = "6B7L10T0337E81FU";  // Replace with your Alpha Vantage API key
+        const currencies = ["USD", "EUR", "JPY", "GBP", "AUD", "CAD", "CHF"];
+
+        function updateTable() {
+            document.getElementById("currencyTable").innerHTML = `
+                <tr>
+                    <th>Currency</th>
+                    <th>Economic Data</th>
+                    <th>Central Bank Stance</th>
+                    <th>Geopolitical Factors</th>
+                    <th>Overall Strength</th>
+                </tr>`;
+            currencies.forEach(currency => {
+                fetch(`https://www.alphavantage.co/query?function=FX_DAILY&from_symbol=${currency}&to_symbol=USD&apikey=${apiKey}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        let economicData = "Moderate"; // Customize based on data
+                        let centralBankStance = "Hawkish"; // Customize based on data
+                        let geopoliticalFactors = "Stable"; // Customize based on data
+                        let overallStrength = "High"; // Customize based on data
+
+                        const row = `<tr>
+                            <td>${currency}</td>
+                            <td>${economicData}</td>
+                            <td>${centralBankStance}</td>
+                            <td>${geopoliticalFactors}</td>
+                            <td>${overallStrength}</td>
+                        </tr>`;
+                        document.getElementById("currencyTable").innerHTML += row;
+                    })
+                    .catch(error => console.error('Error fetching data:', error));
+            });
+        }
+
+        updateTable(); // Initial call to populate the table
+        setInterval(updateTable, 3600000);  // Refresh every hour
+    </script>
+</body>
+</html>
